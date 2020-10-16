@@ -11,6 +11,7 @@ import { parseAuthors } from '../contents/authors'
 import { colors, shadows, sizes, borders } from '../styles/variables'
 // import NewsletterForm from '../components/NewsletterForm'
 import BackToTopButton from '../components/BackToTopButton'
+import MorePosts from '../components/blog/MorePosts'
 
 interface BlogTemplateProps {
     data: {
@@ -41,6 +42,7 @@ interface BlogTemplateProps {
                 author: string
             }
         }
+        posts: any
     }
 }
 
@@ -105,6 +107,7 @@ const StyledBlogTemplate = styled.div`
     td {
         text-align: center;
         border: 1px solid rgba(0,0,0, .1);
+
         &:last-child {
             text-align: left;
             padding: 3rem;
@@ -148,6 +151,31 @@ const StyledBlogTemplate = styled.div`
 const BlogTemplate: React.SFC<BlogTemplateProps> = ({ data }) => {
   const authors = parseAuthors(data.markdownRemark.frontmatter.author);
   const metaPreview = `https://www.gitpod.io${data.markdownRemark.frontmatter.teaserImage ? data.markdownRemark.frontmatter.teaserImage : data.markdownRemark.frontmatter.image}`
+
+  let posts = data.posts.edges.sort((a: any, b: any) =>
+        Date.parse(b.node.frontmatter.date) - Date.parse(a.node.frontmatter.date));
+
+  const currentIndex = posts.findIndex((p: any) => p.node.fields.slug === data.markdownRemark.fields.slug)
+
+  let start = currentIndex + 1
+  let end = currentIndex + 4
+
+  console.log("start", start, posts[start])
+  console.log("end", end, posts[end])
+
+  if (!posts[start]) {
+      start = 0
+  }
+
+  if (!posts[end]) {
+      start = 0
+      end = 3
+  }
+
+  posts = posts.slice(start , end);
+
+  console.log(posts)
+
   return (
   <IndexLayout canonical={data.markdownRemark.frontmatter.url || `${data.markdownRemark.fields.slug.toLowerCase()}`}>
       <Helmet>
@@ -198,6 +226,9 @@ const BlogTemplate: React.SFC<BlogTemplateProps> = ({ data }) => {
                     </div>
                 </StyledBlogTemplate>
             </div>
+
+            <MorePosts posts={posts} />
+
             {/* <NewsletterForm /> */}
 
             <BackToTopButton />
@@ -236,5 +267,28 @@ export const query = graphql`
         url
       }
     }
+    posts: allMarkdownRemark(
+    filter: { fileAbsolutePath: { glob: "**/blog/*" } }
+  ) {
+    edges {
+      node {
+        fields {
+          slug
+        }
+        timeToRead
+        fileAbsolutePath
+        excerpt
+        headings {
+          value
+        }
+        frontmatter {
+          title
+          image
+          date
+          author
+        }
+      }
+    }
+  }
   }
 `
