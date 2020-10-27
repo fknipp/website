@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 
 import styled from '@emotion/styled'
 import { borders, sizes } from '../styles/variables'
@@ -62,9 +62,10 @@ export interface PricingLinksProps {
   text?: JSX.Element
   links?: JSX.Element
   backgroundShouldBeWhite?: boolean
+  styles?: CSSProperties 
 }
 
-const PricingLinks = ({ img, title, text, links, backgroundShouldBeWhite }: PricingLinksProps) => {
+const PricingLinks = ({ img, title, text, links, backgroundShouldBeWhite, styles }: PricingLinksProps) => {
   let Img = img
   let Title = title
   let Text = text
@@ -91,7 +92,7 @@ const PricingLinks = ({ img, title, text, links, backgroundShouldBeWhite }: Pric
   return (
     <div
       className="pattern-bg"
-      style={{ marginBottom: backgroundShouldBeWhite ? '' : '10rem', background: backgroundShouldBeWhite ? 'none' : '' }}
+      style={{ marginBottom: backgroundShouldBeWhite ? '' : '10rem', background: backgroundShouldBeWhite ? 'none' : '', ...styles }}
     >
       <div className="row">
         <StyledPricingLinks>

@@ -14,7 +14,8 @@ const getBrowser = (userAgent: string) => {
   return browser
 }
 
-const StyledDifference = styled.section`
+const StyledDifference = styled.section<{spacing?: 'small'}>`
+  padding: ${({spacing}) => spacing === 'small' ? '6rem 0' : ''};
   text-align: center;
 
   p {
@@ -22,7 +23,8 @@ const StyledDifference = styled.section`
   }
 
   h2 + p {
-    margin: 3rem 0 2rem;
+    max-width: 500px;
+    margin: 3rem auto 2rem;
   }
 
   .btn {
@@ -30,7 +32,12 @@ const StyledDifference = styled.section`
   }
 `
 
-const Difference = () => {
+interface DifferenceProps {
+    title?: string
+    spacing?: 'small'
+}
+
+const Difference = ({title, spacing}: DifferenceProps) => {
   const [browser, setBrowser] = useState()
 
   useEffect(() => {
@@ -38,12 +45,12 @@ const Difference = () => {
   })
 
   return (
-    <StyledDifference className="pattern-bg">
+    <StyledDifference className="pattern-bg" spacing={spacing}>
       <div className="row">
         <h2>
-          <strong>Want to See the Difference for Yourself?</strong>
+            <strong>{title ? title : 'Want to See the Difference for Yourself?'}</strong>
         </h2>
-        <p>Add a Gitpod button to your repository.</p>
+        <p>Add a Gitpod button to your repository and start your dev environment with a single click.</p>
         <a
           href={
             browser === 'Firefox'

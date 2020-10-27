@@ -145,7 +145,10 @@ const IndexPage: React.SFC<{}> = () => (
 
     <SecurityAndOSS />
 
-    <MoreInfo />
+    <MoreInfo 
+        backgroundShouldBeWhite={true} 
+        styles={{ marginTop: '-11rem' }}
+    />
   </IndexLayout>
 )
 
